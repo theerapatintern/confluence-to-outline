@@ -17,11 +17,19 @@ else
     exit 1
 fi
 
-# Step 3: สั่ง Activate Python Environment เพื่อเตรียมรันคำสั่ง cf-export
+# Step 3: จัดการ Python Environment 
 if [ -f "$VENV_ACTIVATE_SCRIPT" ]; then
     source "$VENV_ACTIVATE_SCRIPT" 
 else
-    echo "❌ Error: Virtual environment script not found!"
+    echo "❌ Error: Virtual environment not found!"
+    echo "   Please run 'scripts/0-setup.sh' first to install dependencies."
+    exit 1
+fi
+
+# เช็คว่าคำสั่งพร้อมใช้หรือไม่ 
+if ! command -v cf-export &> /dev/null; then
+    echo "❌ Error: 'cf-export' command not found."
+    echo "   Please run 'scripts/0-setup.sh' to fix installation."
     exit 1
 fi
 

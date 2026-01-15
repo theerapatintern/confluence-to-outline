@@ -100,6 +100,9 @@ run_step() {
 echo "🏁 Starting Full Migration Process..."
 echo "-------------------------------------------------------"
 
+# 0. Setup Environment
+run_step "0-setup-env.sh"
+
 # 1. Sanitize URLs
 if [ "$SKIP_1" = false ]; then
     run_step "1-prepare-urls.sh"

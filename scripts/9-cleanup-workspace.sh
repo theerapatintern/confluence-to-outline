@@ -22,7 +22,8 @@ fi
 
 echo "⚠️  WARNING: This will DELETE local temporary migration files:"
 echo "   🗑️  Output Folder:  $OUTPUT_FOLDER"
-echo "   🗑️  Migrate Folder:   migrate"
+echo "   🗑️  Migrate Folder: migrate"
+echo "   🗑️  Virtual Env:    venv"  # <--- แจ้งเตือน user
 echo ""
 echo "   Waiting 5 seconds... (Press Ctrl+C to cancel)"
 sleep 5
@@ -39,12 +40,20 @@ else
     echo "   ✨ Skipped (Not found): $OUTPUT_FOLDER"
 fi
 
-# 2. ลบ Parts Folder (Markdown ที่แบ่งแล้ว)
+# 2. ลบ Migrate Folder (Staging & Artifacts)
 if [ -d "migrate" ]; then
     rm -rf "migrate"
     echo "   ✅ Deleted: migrate"
 else
     echo "   ✨ Skipped (Not found): migrate"
+fi
+
+# 3. ลบ Virtual Environment (venv)
+if [ -d "venv" ]; then
+    rm -rf "venv"
+    echo "   ✅ Deleted: venv"
+else
+    echo "   ✨ Skipped (Not found): venv"
 fi
 
 echo "-------------------------------------------------------"
