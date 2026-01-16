@@ -117,8 +117,8 @@ get_or_create_collection_id() {
     if [ -n "$NEW_ID" ] && [ "$NEW_ID" != "null" ]; then
         # อัปเดต Cache
         if [ "$clean_target_name" != "$NO_PARENT_NAME" ] && [ -n "$MANAGER_GROUP_ID" ]; then
-             # เพิ่ม Group ให้เป็น read_write
-             ADD_GRP_RES=$(api_post "collections.add_group" "{\"id\": \"$NEW_ID\", \"groupId\": \"$MANAGER_GROUP_ID\", \"permission\": \"read_write\"}")
+             # เพิ่ม Group ให้เป็น admin
+             ADD_GRP_RES=$(api_post "collections.add_group" "{\"id\": \"$NEW_ID\", \"groupId\": \"$MANAGER_GROUP_ID\", \"permission\": \"admin\"}")
              # (Optional: Log success/fail here if needed, but we keep it silent to keep stdout clean)
         fi
 

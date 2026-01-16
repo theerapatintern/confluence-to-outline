@@ -23,18 +23,20 @@ fi
 # 2. Activate Venv
 source "$VENV_DIR/bin/activate"
 
-# 3. Install Dependencies & Install Project (เพื่อให้ได้คำสั่ง cf-export)
+# 3. Install Dependencies
 echo "   ⬇️  Installing dependencies..."
 
 if command -v uv >/dev/null 2>&1; then
     echo "      Using 'uv' to sync dependencies..."
+    uv pip install streamlit
     uv sync
 else
     echo "      Using 'pip' to install..."
     pip install --upgrade pip
     
-    # Install โปรเจคปัจจุบัน (.) ซึ่งจะอ่าน pyproject.toml 
-    # และสร้างคำสั่ง cf-export ให้โดยอัตโนมัติ
+    pip install streamlit
+    
+    # Install โปรเจคหลัก
     pip install -e .
 fi
 
