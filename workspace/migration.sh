@@ -5,6 +5,7 @@ ENV_FILE="workspace/.env"
 SCRIPT_DIR="scripts"
 
 # Default: Run all steps (Set skip variables to false)
+SKIP_0=false
 SKIP_1=false
 SKIP_2=false
 SKIP_3=false
@@ -20,6 +21,7 @@ show_help() {
     echo "Usage: $0 [options]"
     echo ""
     echo "Options:"
+    echo "  --skip-0    Skip Setup Environment (venv, dependencies)"
     echo "  --skip-1    Skip Sanitize URLs"
     echo "  --skip-2    Skip Fetch from Confluence (Export)"
     echo "  --skip-3    Skip Fetch Authors"
@@ -36,6 +38,7 @@ show_help() {
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
+        --skip-0) SKIP_0=true ;;
         --skip-1) SKIP_1=true ;;
         --skip-2) SKIP_2=true ;;
         --skip-3) SKIP_3=true ;;
@@ -101,7 +104,11 @@ echo "🏁 Starting Full Migration Process..."
 echo "-------------------------------------------------------"
 
 # 0. Setup Environment
-run_step "0-setup-env.sh"
+if [ "$SKIP_0" = false ]; then
+    run_step "0-setup-env.sh"
+else
+    echo "⏭️  Skipping Step 0: Setup Environment"
+fi
 
 # 1. Sanitize URLs
 if [ "$SKIP_1" = false ]; then
@@ -148,19 +155,12 @@ fi
 # 7. Import to Outline
 if [ "$SKIP_7" = false ]; then
     run_step "7-import-data.sh" "migrate/packages"
-else
-    echo "⏭️  Skipping Step 7: Import to Outline"
-fi
-
-# --- DELAY (Only wait if Step 7 was run AND Step 8 will be run) ---
-if [ "$SKIP_7" = false ] && [ "$SKIP_8" = false ]; then
-    echo "-------------------------------------------------------"
+        echo "-------------------------------------------------------"
     echo "⏳ Syncing: Waiting 120s for Outline backend..."
     sleep 120
     echo "   ✅ Ready."
-elif [ "$SKIP_7" = true ]; then
-    echo "-------------------------------------------------------"
-    echo "⏭️  Skipping Delay (Import was skipped)."
+else
+    echo "⏭️  Skipping Step 7: Import to Outline"
 fi
 
 # 8. Organize Collections
