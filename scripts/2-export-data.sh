@@ -2,7 +2,7 @@
 
 # ----------------- CONFIGURATION -----------------
 # Step 1: กำหนดตัวแปรและชื่อไฟล์ต่างๆ ที่ต้องใช้ใน Script
-FILE="${INPUT_FILE:-url_list.txt}"
+FILE="${INPUT_FILE:-workspace/url_list.txt}"
 VENV_ACTIVATE_SCRIPT="./venv/bin/activate"
 ENV_FILE="workspace/.env"
 CUSTOM_CONFIG="confluence_markdown_exporter/custom_config.json"

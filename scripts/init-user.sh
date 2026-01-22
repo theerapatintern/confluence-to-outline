@@ -21,7 +21,7 @@ INPUT_FILE="$1"
 
 # ================= VALIDATION =================
 if [ -z "$INPUT_FILE" ]; then
-    echo "Usage: ./scripts/util-invite-and-assign.sh <user_list_file>"
+    echo "Usage: ./scripts/init-user.sh <user_list_file>"
     exit 1
 fi
 

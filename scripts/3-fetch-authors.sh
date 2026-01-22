@@ -25,7 +25,7 @@ CONF_DOMAIN="${CONFLUENCE_URL%/}" # ตัด / ท้ายออกถ้า�
 EMAIL="${CONFLUENCE_EMAIL}"
 TOKEN="${CONFLUENCE_API_TOKEN}"
 
-INPUT_ID="${INPUT_FILE:-url_list.txt}"
+INPUT_ID="${INPUT_FILE:-workspace/url_list.txt}"
 OUTPUT_FILE="confluence_markdown_exporter/creator_report.txt"
 
 # ================= MAIN LOGIC =================

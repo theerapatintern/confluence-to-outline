@@ -12,7 +12,7 @@ else
     echo "Warning: .env file not found."
 fi
 
-TARGET_FILE="${1:-${INPUT_FILE:-url_list.txt}}"
+TARGET_FILE="${1:-${INPUT_FILE:-workspace/url_list.txt}}"
 
 # ================= VALIDATION =================
 if [ ! -f "$TARGET_FILE" ]; then

@@ -22,7 +22,7 @@ INPUT_FILE="$1"
 
 # ================= VALIDATION =================
 if [ -z "$INPUT_FILE" ]; then
-    echo "Usage: ./scripts/util-create-groups-only.sh <group_list_file>"
+    echo "Usage: ./scripts/init-group.sh <group_list_file>"
     exit 1
 fi
 
