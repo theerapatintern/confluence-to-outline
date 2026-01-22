@@ -18,6 +18,7 @@ fi
 INPUT_DIR="migrate/stagings"          # โฟลเดอร์ต้นทาง (ที่แบ่ง part แล้ว)
 OUTPUT_DIR="migrate/packages" # โฟลเดอร์ปลายทาง (พร้อม Import)
 AUTHOR_FILE="confluence_markdown_exporter/creator_report.txt"   # ไฟล์จับคู่ชื่อคน
+AUTHOR_DB_FILE="/tmp/outline_migration_authors.db" 
 
 # ==========================================
 # HELPER FUNCTIONS
@@ -52,9 +53,11 @@ map_type() {
 }
 
 
-# Step 3: โหลดข้อมูลผู้แต่ง (Author) เข้า Memory
+# Step 3: โหลดข้อมูลผู้แต่ง (Author) เข้า Temporary File
 # เพื่อเอาไว้แปะท้ายไฟล์ว่าใครเป็นคนเขียน (Created By: ...)
-declare -A AUTHOR_MAP
+
+# เคลียร์ไฟล์ DB เก่าทิ้งก่อน
+: > "$AUTHOR_DB_FILE" 
 
 if [ -f "$AUTHOR_FILE" ]; then
     echo "📖 Loading authors from $AUTHOR_FILE..."
@@ -70,10 +73,10 @@ if [ -f "$AUTHOR_FILE" ]; then
         clean_author="$(echo "$author" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
         if [ -n "$key" ]; then
-            AUTHOR_MAP["$key"]="$clean_author"
+            echo "${key}|${clean_author}" >> "$AUTHOR_DB_FILE"
         fi
     done < "$AUTHOR_FILE"
-    echo "   Loaded ${#AUTHOR_MAP[@]} authors into memory."
+    echo "   Loaded authors into temporary DB."
 else
     echo "⚠️  Warning: Author file '$AUTHOR_FILE' not found."
 fi
@@ -294,8 +297,10 @@ process_md_file() {
     local filename=$(basename "$input_file")
     local file_key=$(normalize_key "$filename")
     local author_name=""
-    if [ -n "$file_key" ]; then
-        author_name="${AUTHOR_MAP["$file_key"]:-}"
+    
+    if [ -n "$file_key" ] && [ -f "$AUTHOR_DB_FILE" ]; then
+        # ค้นหา key จากไฟล์ DB 
+        author_name=$(grep "^${file_key}|" "$AUTHOR_DB_FILE" | head -n 1 | cut -d'|' -f2)
     fi
 
     if [ -n "$author_name" ] && [ "$author_name" != "Unknown" ]; then
@@ -377,7 +382,9 @@ for part in "${PARTS[@]}"; do
     )
 done
 
-rm -rf $AUTHOR_FILE
+# ลบไฟล์ DB ชั่วคราวทิ้ง
+rm -f "$AUTHOR_DB_FILE"
+rm -rf "$AUTHOR_FILE"
 
 echo
 echo "🎉 All parts processed successfully."
